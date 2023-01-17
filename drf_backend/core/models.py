@@ -9,8 +9,8 @@ class UserManager(BaseUserManager):
         """Create, save and return a new user."""
         if not email:
             raise ValueError('User must have an email address.')
-        if not password:
-            raise ValueError('User must have a password.')
+        if len(password) < 6:
+            raise ValueError('Password must be at least 6 characters.')
         user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)

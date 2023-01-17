@@ -36,10 +36,18 @@ class ModelTest(TestCase):
         with self.assertRaises(ValueError):
             get_user_model().objects.create_user('', 'password123')
 
-    def test_new_user_without_password_raise_error(self):
+    def test_new_user_with_too_short_password_raise_error(self):
         """Test that creating a user without a password raises a ValueError."""
         with self.assertRaises(ValueError):
-            get_user_model().objects.create_user('testUser5@example.com', '')
+            get_user_model().objects.create_user('testUser5@example.com', 'test1')
+
+    def test_new_user_with_6_chars_password_success(self):
+        """Test that creating a user with a password 6 characters
+           does not raise a ValueError."""
+        get_user_model().objects.create_user(
+            'testUser6@example.com',
+            'test12'
+        )
 
     def test_create_superuser(self):
         """Test creating a superuser"""
