@@ -8,6 +8,11 @@ from decimal import Decimal
 from core import models
 
 
+def create_user(email='user@example.com', password='password123'):
+    """Create and return a new user"""
+    return get_user_model().objects.create_user(email, password)
+
+
 class ModelTest(TestCase):
     """Test models."""
 
@@ -51,6 +56,7 @@ class ModelTest(TestCase):
             'testUser6@example.com',
             'test12'
         )
+        self.assertEqual(get_user_model().objects.count(), 1)
 
     def test_create_superuser(self):
         """Test creating a superuser"""
@@ -77,3 +83,21 @@ class ModelTest(TestCase):
 
         self.assertEqual(str(recipe), recipe.title)
 
+    def test_create_tag(self):
+        """Test creating a tag is successful."""
+        user = create_user()
+        tag = models.Tag.objects.create(
+            user=user,
+            name='Tag1'
+        )
+
+        self.assertEqual(str(tag), tag.name)
+
+    def test_create_ingredient(self):
+        """Test creating an ingredient is successful."""
+        user = create_user()
+        ingredient = models.Ingredient.objects.create(
+            user=user,
+            name='Test ingredient'
+        )
+        self.assertEqual(str(ingredient), ingredient.name)
