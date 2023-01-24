@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   db:
-    image: postgres
+    image: postgres:15-alpine
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
     container_name: drf_vue_db
     environment:
       - POSTGRES_DB=devdb
@@ -19,6 +21,7 @@ services:
              python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app/
+      - dev-static-data:/vol/web
     ports:
       - "8000:8000"
     environment:
@@ -28,3 +31,7 @@ services:
       - DB_PASSWORD=admin
     depends_on:
       - db
+
+volumes:
+  dev-db-data:
+  dev-static-data:

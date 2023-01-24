@@ -6,3 +6,4 @@ tzdata==2022.2
 psycopg2-binary==2.9.3
 python-dotenv==0.21.0
 drf-spectacular==0.25.1
+pillow==9.4.0
