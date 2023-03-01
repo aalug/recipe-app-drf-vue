@@ -21,6 +21,14 @@
       >
       </v-btn>
 
+      <BasicAlert
+        v-if="isSuccessful"
+        title="Success!"
+        text="You have successfully created an account."
+        color="success"
+        class="mb-5 mt-2"
+      />
+
       <v-form
         ref="form"
         :loading="loading"
@@ -28,10 +36,7 @@
       >
         <v-text-field
           v-model="email"
-          :rules="[
-            v => !!v || 'Email is required',
-            v => validateEmail(v) || 'E-mail is invalid'
-            ]"
+          :rules="[v => !!v || 'Email is required']"
           label="E-mail"
           required
         ></v-text-field>
@@ -45,10 +50,7 @@
 
         <v-text-field
           v-model="password"
-          :rules="[
-            v => !!v || 'Password is required',
-            v => v.length > 5 || 'Password must be at least 6 characters'
-            ]"
+          :rules="[v => !!v || 'Password is required']"
           label="Password"
           required
           :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
@@ -56,6 +58,13 @@
           hint="At least 6 characters"
           @click:append="showPass = !showPass"
         ></v-text-field>
+
+        <p
+          v-if="errorMessage"
+          class="text-red"
+        >
+          {{ errorMessage }}
+        </p>
 
         <div class="d-flex flex-column">
           <v-btn
@@ -75,27 +84,27 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
-import {validateEmail} from '@/utils/validate-email'
+import {ref} from 'vue';
+import {storeToRefs} from 'pinia';
+import {useUserStore} from '@/store/users';
+import BasicAlert from '@/components/alerts/BasicAlert.vue';
 
-const email = ref<string>('')
-const name = ref<string>('')
-const password = ref<string>('')
+const email = ref<string>('');
+const name = ref<string>('');
+const password = ref<string>('');
 
-const showPass = ref<boolean>(false)
-const showDialog = ref<boolean>(true)
-const loading = ref<boolean>(false)
+const showPass = ref<boolean>(false);
+const showDialog = ref<boolean>(true);
+
+const userStore = useUserStore();
+const {loading, errorMessage, isSuccessful} = storeToRefs(userStore);
 
 const handleSubmit = async () => {
-  loading.value = true
-  try {
-    console.log('start submitting')
-  } catch (e) {
-    console.error(e)
-  } finally {
-    loading.value = false
-    showDialog.value = false
-  }
+  await userStore.handleRegister(
+    email.value,
+    name.value,
+    password.value
+  );
 }
 
 </script>
