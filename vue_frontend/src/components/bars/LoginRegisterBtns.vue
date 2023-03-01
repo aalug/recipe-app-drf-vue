@@ -12,7 +12,7 @@
     <v-btn
       variant="outlined"
       prepend-icon="mdi-login-variant"
-      color="cyan-darken-3"
+      color="cyan"
       rounded="lg"
       class="mr-3"
       @click="showLoginDialog = true;
@@ -24,7 +24,7 @@
     <v-btn
       variant="outlined"
       prepend-icon="mdi-account-plus"
-      color="teal-darken-3"
+      color="teal"
       rounded="lg"
       @click="showRegisterDialog = true;
       refreshingRegisterDialog = !refreshingRegisterDialog"
