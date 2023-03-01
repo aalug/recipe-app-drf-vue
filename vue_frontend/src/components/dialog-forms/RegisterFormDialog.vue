@@ -8,6 +8,14 @@
       class="py-8 px-5"
       style="width: 50%; margin: auto;"
     >
+
+      <v-progress-linear
+        v-if="loading"
+        indeterminate
+        :height="5"
+        style="position: absolute;"
+      ></v-progress-linear>
+
       <v-card-title>
         <span class="text-h4">Register</span>
       </v-card-title>
@@ -31,7 +39,6 @@
 
       <v-form
         ref="form"
-        :loading="loading"
         @submit.prevent="handleSubmit()"
       >
         <v-text-field
@@ -66,10 +73,9 @@
           {{ errorMessage }}
         </p>
 
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column mt-10">
           <v-btn
             color="teal-darken-3"
-            class="mt-4"
             type="submit"
             :disabled="loading"
           >
