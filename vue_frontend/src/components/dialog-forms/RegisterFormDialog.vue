@@ -16,7 +16,7 @@
         style="position: absolute;"
       ></v-progress-linear>
 
-      <v-card-title>
+      <v-card-title class="mb-6">
         <span class="text-h4">Register</span>
       </v-card-title>
 

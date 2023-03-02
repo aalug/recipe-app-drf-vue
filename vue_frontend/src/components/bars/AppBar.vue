@@ -11,7 +11,7 @@
 
     <v-app-bar-title>Recipe app</v-app-bar-title>
     <template v-slot:append>
-      <LoginRegisterBtns v-if="!isUserLoggedIn"/>
+      <LoginRegisterBtns v-if="!token"/>
     </template>
   </v-app-bar>
 
@@ -21,9 +21,22 @@
     temporary
   >
     <v-list>
+      <v-list-item
+        v-if="user"
+        :title="user.email"
+        :subtitle="user.name"
+      />
+      <v-divider></v-divider>
+    </v-list>
+
+    <v-list>
       <v-list-item @click="changeRoute('home')">
         <v-icon>mdi-home</v-icon>
         Home
+      </v-list-item>
+      <v-list-item @click="changeRoute('profile')">
+        <v-icon>mdi-account</v-icon>
+        My Profile
       </v-list-item>
 
     </v-list>
@@ -32,17 +45,25 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
-import {useRouter} from 'vue-router'
-import LoginRegisterBtns from '@/components/bars/LoginRegisterBtns.vue'
+import {ref, onMounted} from 'vue';
+import {useRouter} from 'vue-router';
+import {storeToRefs} from 'pinia';
+import {useUserStore} from '@/store/users';
+import LoginRegisterBtns from '@/components/bars/LoginRegisterBtns.vue';
 
-const showDrawer = ref<boolean>(false)
-const isUserLoggedIn = ref<boolean>(false)
+const showDrawer = ref<boolean>(false);
 
-const router = useRouter()
+const userStore = useUserStore();
+const {token, user} = storeToRefs(userStore);
+
+const router = useRouter();
+
+onMounted(async () => {
+  await userStore.getUserInfo();
+});
 
 const changeRoute = (pathName: string) => {
-  router.push({name: pathName})
+  router.push({name: pathName});
 }
 
 </script>
