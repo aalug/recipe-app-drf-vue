@@ -1,5 +1,5 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 
 const routes = [
   {
@@ -10,6 +10,11 @@ const routes = [
         path: '',
         name: 'home',
         component: () => import('@/views/Home.vue'),
+      },
+      {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('@/views/UserProfile.vue'),
       },
     ],
   },
