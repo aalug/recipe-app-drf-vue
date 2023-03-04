@@ -41,7 +41,7 @@
         @click:append="showPass = !showPass"
       ></v-text-field>
 
-      <p v-if="errorMessage" class="text-red">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-error">{{ errorMessage }}</p>
 
       <v-btn
         type="submit"
@@ -58,16 +58,16 @@
 
 <script setup lang="ts">
 import {ref, onMounted} from 'vue';
-import {storeToRefs} from 'pinia'
+import {storeToRefs} from "pinia"
 import {useUserStore} from '@/store/users';
 import BasicAlert from '@/components/alerts/BasicAlert.vue';
 
 const userStore = useUserStore();
 const {loading, errorMessage, isSuccessful, user} = storeToRefs(userStore);
 
-const email = ref<string>('')
-const name = ref<string>('')
-const password = ref<string>('')
+const email = ref<string>('');
+const name = ref<string>('');
+const password = ref<string>('');
 const showPass = ref<boolean>(false)
 
 onMounted(async () => {

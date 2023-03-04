@@ -34,9 +34,15 @@
         <v-icon>mdi-home</v-icon>
         Home
       </v-list-item>
+
       <v-list-item @click="changeRoute('profile')">
         <v-icon>mdi-account</v-icon>
         My Profile
+      </v-list-item>
+
+      <v-list-item @click="changeRoute('create-recipe')">
+        <v-icon>mdi-book-open-page-variant</v-icon>
+        Create Recipe
       </v-list-item>
 
     </v-list>

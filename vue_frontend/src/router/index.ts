@@ -16,6 +16,11 @@ const routes = [
         name: 'profile',
         component: () => import('@/views/UserProfile.vue'),
       },
+      {
+        path: '/create-recipe',
+        name: 'create-recipe',
+        component: () => import('@/views/CreateRecipe.vue'),
+      },
     ],
   },
 ]

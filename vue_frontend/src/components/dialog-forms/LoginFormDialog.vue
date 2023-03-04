@@ -29,10 +29,7 @@
       >
       </v-btn>
 
-      <v-form
-        ref="form"
-        @submit.prevent="handleSubmit()"
-      >
+      <v-form @submit.prevent="handleSubmit()">
         <v-text-field
           v-model="email"
           :rules="[v => !!v || 'Email is required']"
@@ -53,7 +50,7 @@
 
         <p
           v-if="errorMessage"
-          class="text-red"
+          class="text-error"
         >
           {{ errorMessage }}
         </p>
