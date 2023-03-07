@@ -40,8 +40,13 @@
         My Profile
       </v-list-item>
 
-      <v-list-item @click="changeRoute('create-recipe')">
+      <v-list-item @click="changeRoute('list-recipes')">
         <v-icon>mdi-book-open-page-variant</v-icon>
+        My Recipes
+      </v-list-item>
+
+      <v-list-item @click="changeRoute('create-recipe')">
+        <v-icon>mdi-book-plus</v-icon>
         Create Recipe
       </v-list-item>
 
