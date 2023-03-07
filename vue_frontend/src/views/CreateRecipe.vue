@@ -13,7 +13,7 @@
     ></v-progress-linear>
 
     <v-card-title>
-      <span class="text-h4">Create a new recipe</span>
+      <span id="title" class="text-h4">Create a new recipe</span>
     </v-card-title>
 
     <BasicAlert
@@ -51,7 +51,7 @@
         v-model="recipeDetails.price"
         :error-messages="errorMessages.price"
         label="Price"
-        :rules="[v => isValidPrice() || 'Invalid value']"
+        :rules="[isValidPrice() || 'Invalid value']"
         class="mt-3"
         required
       >
@@ -111,10 +111,10 @@
   </v-card>
 </template>
 
+
 <script setup lang="ts">
 import {reactive, ref} from 'vue';
 import axios from 'axios';
-import {storeToRefs} from 'pinia';
 import {useUserStore} from '@/store/users';
 import AddChips from '@/components/AddChips.vue';
 import BasicAlert from '@/components/alerts/BasicAlert.vue';
@@ -123,6 +123,7 @@ import {Recipe} from '@/types/Recipe';
 const loading = ref<boolean>(false);
 const nonFieldErrorMessage = ref<string>('');
 const isSuccessful = ref<boolean>(false);
+const recipeImage = ref<File | null>(null);
 
 const initialRecipeDetails: Recipe = {
   title: '',
@@ -132,7 +133,6 @@ const initialRecipeDetails: Recipe = {
   tags: [],
   ingredients: [],
   description: '',
-  image: null
 }
 const recipeDetails: Recipe = reactive({...initialRecipeDetails});
 
@@ -142,7 +142,7 @@ const errorMessages = reactive({
   price: ''
 });
 
-const {token} = storeToRefs(useUserStore())
+const token = useUserStore().token;
 
 interface InputFileEvent extends Event {
   target: HTMLInputElement;
@@ -150,7 +150,7 @@ interface InputFileEvent extends Event {
 
 const onFileSelected = (event: InputFileEvent) => {
   if (event.target.files)
-    recipeDetails.image = event.target.files[0];
+    recipeImage.value = event.target.files[0];
 }
 
 type chipData = {
@@ -200,32 +200,47 @@ const handleSubmit = async () => {
     return errorMessages.price = 'Invalid value';
   }
 
-  // Create a from data
-  const formData = new FormData();
+  const requestBody: Recipe = {
+    'title': recipeDetails.title,
+    'timeMinutes': recipeDetails.timeMinutes,
+    'price': recipeDetails.price
+  }
 
-  formData.append('title', recipeDetails.title);
-  formData.append('timeMinutes', recipeDetails.timeMinutes.toString());
-  formData.append('price', recipeDetails.price);
-
-  if (recipeDetails.link) formData.append('link', recipeDetails.link);
-  if (recipeDetails.tags) formData.append('tags', JSON.stringify(recipeDetails.tags));
-  if (recipeDetails.ingredients) formData.append('ingredients', JSON.stringify(recipeDetails.ingredients));
-  if (recipeDetails.description) formData.append('description', recipeDetails.description);
-  if (recipeDetails.image) formData.append('image', recipeDetails.image);
+  if (recipeDetails.link) requestBody['link'] = recipeDetails.link;
+  if (recipeDetails.description) requestBody['description'] = recipeDetails.description;
+  if (recipeDetails.tags) requestBody['tags'] = recipeDetails.tags;
+  if (recipeDetails.ingredients) requestBody['ingredients'] = recipeDetails.ingredients;
 
   // POST request
   try {
-    await axios.post(
+    const {data} = await axios.post(
       `${import.meta.env.VITE_API_BASE}/recipe/recipes/`,
-      formData,
-      {headers: {Authorization: `Token ${token.value}`}}
+      requestBody,
+      {headers: {Authorization: `Token ${token}`}}
     )
-      .then(() => {
-        isSuccessful.value = true;
-        // Clear the form
-        Object.assign(recipeDetails, initialRecipeDetails);
-      })
+    if (recipeImage.value) {
+      const formData = new FormData();
+      formData.append('image', recipeImage.value);
+
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE}/recipe/recipes/${data.id}/upload-image/`,
+        formData,
+        {headers: {Authorization: `Token ${token}`}}
+      )
+    }
+    isSuccessful.value = true;
+
+    // Clear the form
+    Object.assign(recipeDetails, initialRecipeDetails);
+
+    // Scroll to the top of the page to see the success alert
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
   } catch (e) {
+    console.error(e)
     // @ts-ignore
     nonFieldErrorMessage.value = `${e.message}. Try again.`;
   } finally {

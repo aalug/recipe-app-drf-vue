@@ -21,6 +21,11 @@ const routes = [
         name: 'create-recipe',
         component: () => import('@/views/CreateRecipe.vue'),
       },
+      {
+        path: '/my-recipes',
+        name: 'list-recipes',
+        component: () => import('@/views/ListRecipes.vue'),
+      },
     ],
   },
 ]
