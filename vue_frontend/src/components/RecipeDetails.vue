@@ -66,7 +66,7 @@
         <v-btn
           color="blue"
           variant="text"
-          @click="showDialog = false"
+          @click="goToEditRecipe()"
         >
           Edit
         </v-btn>
@@ -85,11 +85,12 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
-import {useUserStore} from '@/store/users';
-import {Tag} from '@/types/Tag';
-import {Ingredient} from '@/types/Ingredient';
+import { useUserStore } from '@/store/users';
+import { Tag } from '@/types/Tag';
+import { Ingredient } from '@/types/Ingredient';
 
 const props = defineProps<{
   recipeId: number,
@@ -109,13 +110,15 @@ const image = ref<string>('');
 
 const token = useUserStore().token;
 
+const router = useRouter();
+
 onMounted(async () => {
   loading.value = true;
   try {
     const {data} = await axios.get(
       `${import.meta.env.VITE_API_BASE}/recipe/recipes/${props.recipeId}/`,
       {headers: {Authorization: `Token ${token}`}}
-    )
+    );
     title.value = data.title;
     timeMinutes.value = data.timeMinutes;
     price.value = data.price;
@@ -130,5 +133,10 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+const goToEditRecipe = () => {
+  router.push({name: 'edit-recipe', params: {recipeId: props.recipeId}});
+};
+
 
 </script>

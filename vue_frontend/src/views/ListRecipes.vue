@@ -26,10 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import {useUserStore} from '@/store/users';
-import {Recipe} from '@/types/Recipe';
+import { useUserStore } from '@/store/users';
+import { Recipe } from '@/types/Recipe';
 import RecipeCard from '@/components/RecipeCard.vue';
 
 const loading = ref<boolean>(false);

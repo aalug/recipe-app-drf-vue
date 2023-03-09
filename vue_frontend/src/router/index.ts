@@ -1,5 +1,5 @@
 // Composables
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
   {
@@ -22,17 +22,22 @@ const routes = [
         component: () => import('@/views/CreateRecipe.vue'),
       },
       {
+        path: '/edit-recipe/:recipeId',
+        name: 'edit-recipe',
+        component: () => import('@/views/CreateRecipe.vue'),
+      },
+      {
         path: '/my-recipes',
         name: 'list-recipes',
         component: () => import('@/views/ListRecipes.vue'),
       },
     ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-})
+});
 
-export default router
+export default router;
