@@ -1,4 +1,13 @@
 <template>
+  <!-- Confirm deleting -->
+  <ConfirmDialog
+    v-if="showConfirmationDialog"
+    :key="refreshConfirmDialog"
+    title="Are you sure"
+    text="you want to delete this recipe?"
+    @confirm="handleConfirmingDelete"
+  />
+
   <v-dialog
     v-model="showDialog"
     width="1000"
@@ -61,23 +70,32 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-container class="d-flex justify-space-between">
+          <div>
+            <v-btn
+              color="red"
+              variant="text"
+              @click="startDeletingProcess()"
+            >
+              Delete
+            </v-btn>
+            <v-btn
+              color="blue"
+              variant="text"
+              @click="goToEditRecipe()"
+            >
+              Edit
+            </v-btn>
+          </div>
 
-        <v-btn
-          color="blue"
-          variant="text"
-          @click="goToEditRecipe()"
-        >
-          Edit
-        </v-btn>
-        <v-btn
-          color="error"
-          variant="text"
-          @click="showDialog = false"
-        >
-          Close
-        </v-btn>
-
+          <v-btn
+            color="error"
+            variant="text"
+            @click="showDialog = false"
+          >
+            Close
+          </v-btn>
+        </v-container>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -91,13 +109,19 @@ import axios from 'axios';
 import { useUserStore } from '@/store/users';
 import { Tag } from '@/types/Tag';
 import { Ingredient } from '@/types/Ingredient';
+import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
 const props = defineProps<{
   recipeId: number,
 }>();
 
+const emit = defineEmits(['removedRecipe'])
+
 const showDialog = ref<boolean>(true);
 const loading = ref<boolean>(false);
+
+const showConfirmationDialog = ref<boolean>(false);
+const refreshConfirmDialog = ref<boolean>(false);
 
 const title = ref<string>('');
 const timeMinutes = ref<number>(0);
@@ -138,5 +162,50 @@ const goToEditRecipe = () => {
   router.push({name: 'edit-recipe', params: {recipeId: props.recipeId}});
 };
 
+const startDeletingProcess = () => {
+  /**
+   * Start deleting process. After the `delete` button is clicked, this function
+   * will be called, and it will:
+   * 1. Refresh the dialog component
+   * 2. Display the confirmation dialog
+   */
+  showConfirmationDialog.value = true;
+  refreshConfirmDialog.value = !refreshConfirmDialog.value;
+};
+
+const handleConfirmingDelete = (isConfirmed: boolean) => {
+  /**
+   * This function is called when dialog has received a response (emit).
+   * If the response is `OK` then it will proceed and delete the recipe.
+   */
+  if (isConfirmed) {
+    deleteRecipe();
+  }
+};
+
+const deleteRecipe = async () => {
+  /**
+   * If user clicked on `OK` on confirmation dialog, this function will be called,
+   * and it will send DELETE request to the server to delete the recipe.
+   */
+  loading.value = true;
+  try {
+    await axios.delete(
+      `${import.meta.env.VITE_API_BASE}/recipe/recipes/${props.recipeId}/`,
+      {headers: {Authorization: `Token ${token}`}}
+    );
+    // Emit the ID of the deleted recipe to update the recipe list in parent component
+    emit('removedRecipe', props.recipeId);
+
+    // Display the success toast and close the details
+
+    showDialog.value = false;
+  } catch (e) {
+    console.error(e);
+    // display error message
+  } finally {
+    loading.value = false;
+  }
+};
 
 </script>

@@ -18,6 +18,7 @@
           :tags="recipe.tags"
           :ingredients="recipe.ingredients"
           :image="recipe.image"
+          @removedRecipe="handleRemovedRecipe"
         />
       </v-col>
     </v-row>
@@ -51,5 +52,9 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+const handleRemovedRecipe = (id: number) => {
+  recipes.value = recipes.value.filter(r => r.id !== id)
+}
 
 </script>

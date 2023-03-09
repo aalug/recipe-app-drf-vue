@@ -3,6 +3,7 @@
     v-if="openDetails"
     :key="refresher"
     :recipeId="id"
+    @removedRecipe="handleRemovedRecipe"
   />
 
   <v-card
@@ -90,12 +91,18 @@ defineProps<{
   image: string | null,
 }>();
 
+const emit = defineEmits(['removedRecipe']);
+
 const openDetails = ref<boolean>(false);
 const refresher = ref<boolean>(false);
 
 const showDetails = () => {
   openDetails.value = true;
   refresher.value = !refresher.value;
+};
+
+const handleRemovedRecipe = (id: number) => {
+  emit('removedRecipe', id);
 };
 
 </script>

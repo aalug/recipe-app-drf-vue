@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import AppBar from '@/components/bars/AppBar.vue'
+import AppBar from '@/components/bars/AppBar.vue';
 
 </script>
 
