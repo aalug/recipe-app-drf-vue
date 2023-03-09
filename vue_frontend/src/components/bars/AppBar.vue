@@ -56,10 +56,10 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
-import {useRouter} from 'vue-router';
-import {storeToRefs} from 'pinia';
-import {useUserStore} from '@/store/users';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/users';
 import LoginRegisterBtns from '@/components/bars/LoginRegisterBtns.vue';
 
 const showDrawer = ref<boolean>(false);
@@ -75,6 +75,6 @@ onMounted(async () => {
 
 const changeRoute = (pathName: string) => {
   router.push({name: pathName});
-}
+};
 
 </script>

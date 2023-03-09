@@ -87,9 +87,9 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import {storeToRefs} from 'pinia';
-import {useUserStore} from '@/store/users';
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/users';
 import BasicAlert from '@/components/alerts/BasicAlert.vue';
 
 const email = ref<string>('');
@@ -108,6 +108,6 @@ const handleSubmit = async () => {
     name.value,
     password.value
   );
-}
+};
 
 </script>

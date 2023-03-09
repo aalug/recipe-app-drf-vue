@@ -72,9 +72,9 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import {storeToRefs} from 'pinia';
-import {useUserStore} from '@/store/users';
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/users';
 
 const showPass = ref<boolean>(false);
 const showDialog = ref<boolean>(true);
@@ -90,7 +90,7 @@ const handleSubmit = async () => {
     email.value,
     password.value
   );
-  showDialog.value = !isSuccessful.value
-}
+  showDialog.value = !isSuccessful.value;
+};
 
 </script>

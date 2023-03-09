@@ -1,8 +1,8 @@
-import {ref} from 'vue';
-import {defineStore} from 'pinia';
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
 import axios from 'axios';
-import {User} from '@/types/User'
-import {validateEmail} from '@/utils/validate-email';
+import { User } from '@/types/User';
+import { validateEmail } from '@/utils/validate-email';
 
 export const useUserStore = defineStore('users', () => {
     const user = ref<User>(new User());
@@ -69,7 +69,7 @@ export const useUserStore = defineStore('users', () => {
       } finally {
         loading.value = false;
       }
-    }
+    };
 
     const handleLogin = async (email: string, password: string) => {
       /**
@@ -119,7 +119,7 @@ export const useUserStore = defineStore('users', () => {
       } finally {
         loading.value = false;
       }
-    }
+    };
 
     const getUserInfo = async () => {
       /**
@@ -135,13 +135,13 @@ export const useUserStore = defineStore('users', () => {
               user.value.name = response.data.name;
               user.value.email = response.data.email;
             }
-          )
+          );
       } catch (e) {
         console.error(e);
       } finally {
         loading.value = false;
       }
-    }
+    };
 
     const updateUserProfile = async (email: string, name: string, password: string) => {
       /**
@@ -149,10 +149,10 @@ export const useUserStore = defineStore('users', () => {
        * Based on passed arguments, send put or patch request to the server.
        */
       // Validation
-      if (!validateEmail(email)) return errorMessage.value = 'E-mail is invalid'
-      if (!name) return errorMessage.value = 'Name is required'
+      if (!validateEmail(email)) return errorMessage.value = 'E-mail is invalid';
+      if (!name) return errorMessage.value = 'Name is required';
       // If there is a password, but it is less than 6 characters
-      if (password && password.length < 6) return errorMessage.value = 'Password must be at least 6 characters'
+      if (password && password.length < 6) return errorMessage.value = 'Password must be at least 6 characters';
 
       const url = `${import.meta.env.VITE_API_BASE}/user/me/`;
       const authHeaders = {headers: {Authorization: `Token ${token.value}`}};
@@ -178,7 +178,7 @@ export const useUserStore = defineStore('users', () => {
             .then(async () => {
               await getUserInfo();
               isSuccessful.value = true;
-            })
+            });
         } catch (e) {
           console.error(e);
           // @ts-ignore
@@ -230,7 +230,7 @@ export const useUserStore = defineStore('users', () => {
           }
         }
       }
-    }
+    };
 
     return {
       user,
@@ -242,6 +242,6 @@ export const useUserStore = defineStore('users', () => {
       handleLogin,
       getUserInfo,
       updateUserProfile,
-    }
+    };
   }
-)
+);
