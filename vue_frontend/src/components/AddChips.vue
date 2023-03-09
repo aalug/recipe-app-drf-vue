@@ -54,17 +54,24 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed} from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 const props = defineProps<{
   itemType: string,
-  chipColor: string
-}>()
+  chipColor: string,
+  alreadySelected: string[]
+}>();
 
 const emit = defineEmits(['addChip', 'removeChip']);
 
 const selected = ref<string[]>([]);
 const newItem = ref<string>('');
+
+onMounted(() => {
+  if (props.alreadySelected) {
+    selected.value = props.alreadySelected;
+  }
+});
 
 const determineArticle = (word: string): string => {
   const vowels = ['a', 'e', 'i', 'o', 'u'];
@@ -73,7 +80,7 @@ const determineArticle = (word: string): string => {
   } else {
     return 'a';
   }
-}
+};
 const article: string = determineArticle(props.itemType);
 
 const selections = computed(() => {
@@ -91,16 +98,17 @@ const addItem = () => {
    * * If the item is not already in the selected list, add it, and emit an event
    * * to the parent component. The parent component needs this data to later send a request.
    */
-  if (!newItem.value || selected.value.includes(newItem.value)) return;
+  const trimmedValue = newItem.value.trim();
+  if (!trimmedValue || selected.value.includes(newItem.value)) return;
 
-  selected.value.push(newItem.value);
+  selected.value.push(trimmedValue);
   emit('addChip', {
     itemType: props.itemType,
     itemName: newItem.value
   });
   newItem.value = '';
   document.getElementById(`${props.itemType}Id`)?.focus();
-}
+};
 
 const removeItem = (value: string) => {
   /**
@@ -112,6 +120,6 @@ const removeItem = (value: string) => {
     itemType: props.itemType,
     itemName: value
   });
-}
+};
 
 </script>

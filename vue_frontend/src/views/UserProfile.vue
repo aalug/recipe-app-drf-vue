@@ -57,9 +57,9 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
-import {storeToRefs} from "pinia"
-import {useUserStore} from '@/store/users';
+import { ref, onMounted } from 'vue';
+import { storeToRefs } from "pinia";
+import { useUserStore } from '@/store/users';
 import BasicAlert from '@/components/alerts/BasicAlert.vue';
 
 const userStore = useUserStore();
@@ -68,23 +68,23 @@ const {loading, errorMessage, isSuccessful, user} = storeToRefs(userStore);
 const email = ref<string>('');
 const name = ref<string>('');
 const password = ref<string>('');
-const showPass = ref<boolean>(false)
+const showPass = ref<boolean>(false);
 
 onMounted(async () => {
   /**
    * on mount, get the user data and set the values
    * so that the fields are prepopulated.
    */
-  await userStore.getUserInfo()
-  email.value = user.value.email
-  name.value = user.value.name
-})
+  await userStore.getUserInfo();
+  email.value = user.value.email;
+  name.value = user.value.name;
+});
 const handleSubmit = async () => {
   await userStore.updateUserProfile(
     email.value,
     name.value,
     password.value
-  )
-}
+  );
+};
 
 </script>

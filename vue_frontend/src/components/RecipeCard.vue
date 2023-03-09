@@ -75,9 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import {Tag} from '@/types/Tag';
-import {Ingredient} from '@/types/Ingredient';
-import {ref} from 'vue';
+import { Tag } from '@/types/Tag';
+import { Ingredient } from '@/types/Ingredient';
+import { ref } from 'vue';
 import RecipeDetails from '@/components/RecipeDetails.vue';
 
 defineProps<{
@@ -88,7 +88,7 @@ defineProps<{
   tags: Tag[],
   ingredients: Ingredient[],
   image: string | null,
-}>()
+}>();
 
 const openDetails = ref<boolean>(false);
 const refresher = ref<boolean>(false);
@@ -96,6 +96,6 @@ const refresher = ref<boolean>(false);
 const showDetails = () => {
   openDetails.value = true;
   refresher.value = !refresher.value;
-}
+};
 
 </script>
