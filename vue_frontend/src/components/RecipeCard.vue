@@ -12,8 +12,8 @@
   >
     <v-img
       cover
-      height="270"
-      width="400"
+      height="300"
+      width="450"
       :src="image"
     ></v-img>
 
@@ -39,7 +39,7 @@
           v-for="tag in tags"
           :key="tag.id"
           color="teal-lighten-2"
-          class="mb-1"
+          class="mb-1 mr-1"
         >
           {{ tag.name }}
         </v-chip>
@@ -55,7 +55,7 @@
           v-for="ingredient in ingredients"
           :key="ingredient.id"
           color="lime"
-          class="mb-1"
+          class="mb-1 mr-1"
         >
           {{ ingredient.name }}
         </v-chip>

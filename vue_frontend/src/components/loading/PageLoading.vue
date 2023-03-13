@@ -1,13 +1,14 @@
 <template>
-$END$
+  <v-progress-circular
+    indeterminate
+    :size="128"
+    :width="10"
+    class="loading"
+  ></v-progress-circular>
 </template>
 
-<script>
-export default {
-name: "PageLoading"
-}
-</script>
-
 <style scoped>
-
+.loading {
+  margin-top: 7rem
+}
 </style>
