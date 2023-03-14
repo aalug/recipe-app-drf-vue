@@ -50,6 +50,11 @@
         Create Recipe
       </v-list-item>
 
+      <v-list-item @click="changeRoute('tags-ingredients-details')">
+        <v-icon>mdi-format-list-bulleted-type</v-icon>
+        My tags and ingredients
+      </v-list-item>
+
     </v-list>
   </v-navigation-drawer>
 
