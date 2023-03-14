@@ -31,6 +31,11 @@ const routes = [
         name: 'list-recipes',
         component: () => import('@/views/ListRecipes.vue'),
       },
+      {
+        path: '/tags-and-ingredients',
+        name: 'tags-ingredients-details',
+        component: () => import('@/views/TagsIngredientsDetails.vue'),
+      },
     ],
   },
 ];
