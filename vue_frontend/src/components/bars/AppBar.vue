@@ -11,7 +11,7 @@
 
     <v-app-bar-title>Recipe app</v-app-bar-title>
     <template v-slot:append>
-      <LoginRegisterBtns v-if="!token"/>
+      <LoginRegisterBtns v-if="!isUserLoggedIn"/>
     </template>
   </v-app-bar>
 
@@ -61,22 +61,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/users';
 import LoginRegisterBtns from '@/components/bars/LoginRegisterBtns.vue';
 
+defineProps<{
+  isUserLoggedIn: boolean,
+}>()
+
 const showDrawer = ref<boolean>(false);
 
 const userStore = useUserStore();
-const {token, user} = storeToRefs(userStore);
+const {user} = storeToRefs(userStore);
 
 const router = useRouter();
-
-onMounted(async () => {
-  await userStore.getUserInfo();
-});
 
 const changeRoute = (pathName: string) => {
   router.push({name: pathName});
