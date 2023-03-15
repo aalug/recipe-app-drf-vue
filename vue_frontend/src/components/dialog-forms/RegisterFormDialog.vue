@@ -21,7 +21,6 @@
       </v-card-title>
 
       <v-btn
-        color="red"
         icon="mdi-close"
         variant="text"
         style="position: absolute; top: 0.3rem; right: 0.3rem;"
