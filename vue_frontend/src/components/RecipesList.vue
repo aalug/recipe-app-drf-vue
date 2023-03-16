@@ -6,7 +6,7 @@
         sm="12"
         md="6"
         lg="4"
-        v-for="recipe in recipes"
+        v-for="recipe in recipesList"
         :key="recipe.id"
       >
         <RecipeCard
@@ -26,18 +26,20 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { Recipe } from '@/types/Recipe';
 import RecipeCard from '@/components/RecipeCard.vue';
 
-defineProps<{
+const props = defineProps<{
   recipes: Recipe[]
 }>();
 
+const recipesList = ref<Recipe[]>([...props.recipes])
 const handleRemovedRecipe = (id: number) => {
   /**
    * Updates the recipes array to reflect deleting a recipe.
    */
-  recipes.value = recipes.value.filter(r => r.id !== id);
+  recipesList.value = recipesList.value.filter(r => r.id !== id);
 };
 
 </script>

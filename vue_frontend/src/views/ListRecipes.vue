@@ -17,25 +17,44 @@
         @selectChip="handleIngredientsFilter"
       />
 
-      <SortingPanel
-        class="mt-6 mb-5"
-        @sortRecipes="handleSort"
-      />
+      <v-container
+        class="d-flex justify-space-between mt-6 mb-5 "
+      >
+        <v-text-field
+          label="Search..."
+          v-model.trim="search"
+          class="mr-4"
+        ></v-text-field>
+
+        <SortingPanel
+          class="ml-4"
+          @sortRecipes="handleSort"
+        />
+      </v-container>
 
     </v-container>
     <div v-if="loading" class="d-flex justify-center">
       <PageLoading/>
     </div>
-    <RecipesList
+    <v-container
       v-else
-      :recipes="recipes"
-    />
+      class="d-flex justify-center"
+    >
+      <RecipesList
+        v-if="recipes.length"
+        :key="refreshRecipesList"
+        :recipes="recipes"
+      />
+      <h2 v-else
+      >No recipes
+      </h2>
+    </v-container>
 
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { useUserStore } from '@/store/users';
 import { Recipe } from '@/types/Recipe';
@@ -55,11 +74,14 @@ const selectedTags = ref<number[]>([]);
 const selectedIngredients = ref<number[]>([]);
 
 const sortedBy = ref<SortOption>();
+const search = ref<string>('');
 
 // Exists to be a key of the v-container and to refresh it
 const refreshRecipesList = ref<boolean>(false);
 
 const token = useUserStore().token;
+
+let allRecipes: Recipe[] = [];
 
 onMounted(async () => {
   loading.value = true;
@@ -68,8 +90,8 @@ onMounted(async () => {
       `${import.meta.env.VITE_API_BASE}/recipe/recipes/`,
       {headers: {Authorization: `Token ${token}`}}
     );
-    recipes.value = data;
-
+    allRecipes = data;
+    recipes.value = allRecipes;
     // Get tags
     const tagsRes = await axios.get(
       `${import.meta.env.VITE_API_BASE}/recipe/tags/`,
@@ -108,8 +130,9 @@ const filterRecipes = async () => {
       `${import.meta.env.VITE_API_BASE}/recipe/recipes?${tagsQuery}${twoQueries}${ingredientsQuery}`,
       {headers: {Authorization: `Token ${token}`}}
     );
-    recipes.value = data;
+    allRecipes = data;
 
+    if (search.value) handleSearch();
     // Sort recipes by previously selected option
     if (sortedBy.value) handleSort(sortedBy.value);
   } catch (e) {
@@ -128,6 +151,35 @@ const handleIngredientsFilter = async (selected: number[]) => {
   selectedIngredients.value = selected;
   await filterRecipes();
 };
+
+const handleSearch = () => {
+  /**
+   * Filter recipes to ones that contain the given phrase.
+   */
+  refreshRecipesList.value = !refreshRecipesList.value;
+
+  recipes.value = allRecipes.filter((recipe) => {
+    let tags = recipe.tags ? [...recipe.tags] : [];
+    let ingredients = recipe.ingredients ? [...recipe.ingredients] : [];
+    tags = tags.filter((tag) => {
+      return tag.name.toLowerCase().includes(search.value.toLowerCase());
+    });
+    ingredients = ingredients.filter((ingredient) => {
+      return ingredient.name.toLowerCase().includes(search.value.toLowerCase());
+    });
+    if (
+      tags.length ||
+      ingredients.length ||
+      recipe.title.toLowerCase().includes(search.value.toLowerCase())
+    ) {
+      return recipe;
+    }
+  });
+};
+
+watch(search, () => {
+  handleSearch();
+});
 
 const handleSort = (sortBy: SortOption) => {
   /**
@@ -177,6 +229,7 @@ const sortByTitle = (direction: 'asc' | 'desc') => {
       throw new Error(`Invalid direction: ${direction}`);
     }
   });
+  refreshRecipesList.value = !refreshRecipesList.value;
 };
 
 const sortByPrice = (direction: 'asc' | 'desc') => {
@@ -207,6 +260,7 @@ const sortByPrice = (direction: 'asc' | 'desc') => {
       throw new Error(`Invalid direction: ${direction}`);
     }
   });
+  refreshRecipesList.value = !refreshRecipesList.value;
 };
 
 const sortByTimeMinutes = (direction: 'asc' | 'desc') => {
@@ -223,6 +277,7 @@ const sortByTimeMinutes = (direction: 'asc' | 'desc') => {
       throw new Error(`Invalid direction: ${direction}`);
     }
   });
+  refreshRecipesList.value = !refreshRecipesList.value;
 };
 
 </script>
