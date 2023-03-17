@@ -54,6 +54,7 @@
         <div class="d-flex flex-column mt-10">
           <v-btn
             :color="`var(--${color})`"
+            :disabled="loading"
             type="submit"
           >
             Save
@@ -62,6 +63,7 @@
           <v-btn
             color="error"
             class="mt-2"
+            :disabled="loading"
             @click="startDeletingProcess()"
           >
             Delete
@@ -157,13 +159,13 @@ const startDeletingProcess = () => {
   refreshConfirmDialog.value = !refreshConfirmDialog.value;
 };
 
-const handleConfirmingDelete = (isConfirmed: boolean) => {
+const handleConfirmingDelete = async (isConfirmed: boolean) => {
   /**
    * This function is called when dialog has received a response (emit).
    * If the response is `OK` then it will proceed and delete the recipe.
    */
   if (isConfirmed) {
-    deleteItem();
+    await deleteItem();
   }
 };
 
