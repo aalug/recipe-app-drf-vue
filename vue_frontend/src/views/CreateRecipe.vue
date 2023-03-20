@@ -65,21 +65,43 @@
       </v-text-field>
 
       <AddChips
+        :key="clearAllTags"
         itemType="tag"
         chipColor="teal-lighten-2"
         :alreadySelected="oldTags"
+        :clearAllChips="clearAllTags"
         @addChip="handleAddChip"
         @removeChip="handleRemoveChip"
+        @afterClear="clearOldNewTags();"
         class="mt-3"
       />
+      <v-btn
+        icon="mdi-trash-can"
+        color="red"
+        size="small"
+        variant="text"
+        style="margin-top: -7rem;"
+        @click="clearAllTags = true"
+      ></v-btn>
       <AddChips
+        :key="clearAllIngredients"
         itemType="ingredient"
         chipColor="lime"
         :alreadySelected="oldIngredients"
+        :clearAllChips="clearAllIngredients"
         @addChip="handleAddChip"
         @removeChip="handleRemoveChip"
+        @afterClear="clearOldNewIngredients();"
         class="mt-3"
       />
+      <v-btn
+        icon="mdi-trash-can"
+        color="red"
+        size="small"
+        variant="text"
+        style="margin-top: -7rem;"
+        @click="clearAllIngredients = true"
+      ></v-btn>
 
       <v-textarea
         v-model="recipeDetails.description"
@@ -139,6 +161,8 @@ const loading = ref<boolean>(false);
 const nonFieldErrorMessage = ref<string>('');
 const isSuccessful = ref<boolean>(false);
 const recipeImage = ref<File | null>(null);
+const clearAllIngredients = ref<boolean>(false);
+const clearAllTags = ref<boolean>(false);
 
 const imgRefresher = ref<boolean>(false);
 const fileChanged = ref<boolean>(false);
@@ -319,7 +343,7 @@ const handleSubmit = async () => {
         );
       } catch (e) {
         console.error(e);
-        nonFieldErrorMessage.value = 'Could not upload new image. Please try again.'
+        nonFieldErrorMessage.value = 'Could not upload new image. Please try again.';
       } finally {
         loading.value = false;
       }
@@ -341,7 +365,7 @@ const handleSubmit = async () => {
       } catch (e) {
         console.error(e);
         // @ts-ignore
-        nonFieldErrorMessage.value = `${e.message}. Try again.`;
+        nonFieldErrorMessage.value = `${e.message}. Please try again.`;
       } finally {
         loading.value = false;
       }
@@ -369,7 +393,14 @@ const handleSubmit = async () => {
 
       // Clear the form
       Object.assign(recipeDetails, initialRecipeDetails);
+      recipeDetails.tags = [];
+      recipeDetails.ingredients = [];
+      clearAllIngredients.value = true;
+      clearAllTags.value = true;
 
+      errorMessages.title = '';
+      errorMessages.timeMinutes = '';
+      errorMessages.price = '';
     } catch (e) {
       console.error(e);
       // @ts-ignore
@@ -383,7 +414,17 @@ const handleSubmit = async () => {
     top: 0,
     behavior: 'smooth'
   });
-
 };
 
+const clearOldNewIngredients = () => {
+  clearAllIngredients.value = true;
+  oldIngredients.value = [];
+  recipeDetails.ingredients = [];
+}
+
+const clearOldNewTags = () => {
+  clearAllTags.value = true;
+  oldTags.value = [];
+  recipeDetails.tags = [];
+}
 </script>

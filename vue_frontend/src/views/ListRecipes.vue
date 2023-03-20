@@ -131,8 +131,12 @@ const filterRecipes = async () => {
       {headers: {Authorization: `Token ${token}`}}
     );
     allRecipes = data;
+    recipes.value = allRecipes;
 
+    // if there was search present, search for the same phrase again
+    // after updating the recipes array.
     if (search.value) handleSearch();
+
     // Sort recipes by previously selected option
     if (sortedBy.value) handleSort(sortedBy.value);
   } catch (e) {
@@ -206,6 +210,8 @@ const sortByTitle = (direction: 'asc' | 'desc') => {
    * Sort recipes by title, in ascending order - if direction === 'asc',
    * in descending order - if direction === 'desc'.
    */
+  refreshRecipesList.value = !refreshRecipesList.value;
+
   recipes.value.sort((a, b) => {
     const titleA = a.title.toLowerCase();
     const titleB = b.title.toLowerCase();
@@ -229,7 +235,6 @@ const sortByTitle = (direction: 'asc' | 'desc') => {
       throw new Error(`Invalid direction: ${direction}`);
     }
   });
-  refreshRecipesList.value = !refreshRecipesList.value;
 };
 
 const sortByPrice = (direction: 'asc' | 'desc') => {
@@ -237,6 +242,8 @@ const sortByPrice = (direction: 'asc' | 'desc') => {
    * Sort recipes by price, in ascending order - if direction === 'asc',
    * in descending order - if direction === 'desc'.
    */
+  refreshRecipesList.value = !refreshRecipesList.value;
+
   recipes.value.sort((a, b) => {
     const priceA = parseFloat(a.price);
     const priceB = parseFloat(b.price);
@@ -260,7 +267,6 @@ const sortByPrice = (direction: 'asc' | 'desc') => {
       throw new Error(`Invalid direction: ${direction}`);
     }
   });
-  refreshRecipesList.value = !refreshRecipesList.value;
 };
 
 const sortByTimeMinutes = (direction: 'asc' | 'desc') => {
@@ -268,6 +274,8 @@ const sortByTimeMinutes = (direction: 'asc' | 'desc') => {
    * Sort recipes by timeMinutes, in ascending order - if direction === 'asc',
    * in descending order - if direction === 'desc'.
    */
+  refreshRecipesList.value = !refreshRecipesList.value;
+
   recipes.value.sort((a, b) => {
     if (direction === 'asc') {
       return a.timeMinutes - b.timeMinutes;
@@ -277,7 +285,6 @@ const sortByTimeMinutes = (direction: 'asc' | 'desc') => {
       throw new Error(`Invalid direction: ${direction}`);
     }
   });
-  refreshRecipesList.value = !refreshRecipesList.value;
 };
 
 </script>
