@@ -32,6 +32,7 @@
             :label="`Add ${article} ${itemType}`"
             single-line
             @keyup.enter="addItem()"
+            @focus="afterClear()"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -59,18 +60,25 @@ import { ref, computed, onMounted } from 'vue';
 const props = defineProps<{
   itemType: string,
   chipColor: string,
-  alreadySelected: string[]
+  alreadySelected: string[],
+  clearAllChips: boolean
 }>();
 
-const emit = defineEmits(['addChip', 'removeChip']);
+const emit = defineEmits([
+  'addChip', 'removeChip', 'afterClear'
+]);
 
 const selected = ref<string[]>([]);
 const newItem = ref<string>('');
+const clearAll = ref<boolean>(false);
+
+let runClear = true;
 
 onMounted(() => {
   if (props.alreadySelected) {
     selected.value = props.alreadySelected;
   }
+  if (props.clearAllChips) clearAll.value = true;
 });
 
 const determineArticle = (word: string): string => {
@@ -85,9 +93,10 @@ const article: string = determineArticle(props.itemType);
 
 const selections = computed(() => {
   const selections = [];
-
-  for (const selection of selected.value) {
-    selections.push(selection);
+  if (!props.clearAllChips) {
+    for (const selection of selected.value) {
+      selections.push(selection);
+    }
   }
   return selections;
 });
@@ -120,6 +129,15 @@ const removeItem = (value: string) => {
     itemType: props.itemType,
     itemName: value
   });
+};
+
+const afterClear = () => {
+  if (runClear && props.clearAllChips) {
+    clearAll.value = false;
+    emit('afterClear');
+    selected.value = [];
+    runClear = false;
+  }
 };
 
 </script>
