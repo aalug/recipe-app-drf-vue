@@ -64,3 +64,7 @@ To run DRF tests:
 
 More information about API endpoints, with examples of data that needs to be sent with a request, can be found
 on http://localhost:8000/api/docs/ 
+
+
+### More Information
+This DRF app uses djangorestframework-camel-case to enable the server to send and receive data in a format that is compatible with TypeScript. This package provides support for camel-case style serialization and deserialization, which is appropriate for the conventions used in Vue.js.
