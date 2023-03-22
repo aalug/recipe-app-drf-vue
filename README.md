@@ -12,6 +12,7 @@ Vue frontend uses:
 - Vue 3
     + TypeScript
     + Composition API
+- Pinia
 - Vuetify
 
 ## Getting started
